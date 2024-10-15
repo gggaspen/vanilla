@@ -1,4 +1,4 @@
-import { loadResources, renderContent } from "../../engine/load-resources.js";
+import { initializeComponent } from "../../engine/load-resources.js";
 
 const config = {
   style: `./app/views/arena.css`,
@@ -10,21 +10,17 @@ class Arena extends HTMLElement {
     this.shadow = this.attachShadow({ mode: "open" });
     this.title = this.getAttribute("title");
     this.renderLoading();
-    this.loadComponentResources();
+    this.initialize();
   }
 
-  loadComponentResources() {
-    const { style, template } = config;
-    loadResources([style, template])
-      .then(([css, html]) => {
-        renderContent(css, html, this.shadow);
+  initialize() {
+    initializeComponent(this, config, {
+      onAfterRender: () => {
         this.updateTitle();
         this.addReactiveClick();
-      })
-      .catch((error) => {
-        console.error("Error al cargar recursos:", error);
-        this.renderError();
-      });
+      },
+      onError: () => this.renderError(),
+    });
   }
 
   renderLoading() {
