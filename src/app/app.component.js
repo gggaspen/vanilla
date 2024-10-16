@@ -7,12 +7,14 @@ const config = {
 };
 
 class App extends HTMLElement {
+  title = "";
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
-    this.titleSignal = Signal(
-      this.getAttribute("title") || "Título predeterminado"
-    );
+    this.title = this.getAttribute("title");
+
+    this.titleSignal = Signal(this.title);
     this.renderLoading();
     this.initialize();
   }
@@ -26,7 +28,7 @@ class App extends HTMLElement {
             this.titleElement.textContent = newTitle;
           }
         });
-        this.titleSignal.set("Holis");
+        this.titleSignal.set(this.title);
       },
       onError: () => this.renderError(),
     });
