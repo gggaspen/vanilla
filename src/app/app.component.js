@@ -1,12 +1,12 @@
-import { initializeComponent } from "../../engine/load-resources.js";
-import { Signal } from "../../engine/signal.js"; // Importamos la implementación de Signal
+import { initializeComponent } from "../core/load-resources.js";
+import { Signal } from "../core/signal.js";
 
 const config = {
-  style: `./app/views/arena.css`,
-  template: `./app/views/arena.html`,
+  style: `./app/app.component.css`,
+  template: `./app/app.component.html`,
 };
 
-class Arena extends HTMLElement {
+class App extends HTMLElement {
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
@@ -56,6 +56,6 @@ class Arena extends HTMLElement {
   }
 }
 
-customElements.define("app-arena", Arena);
+customElements.define("app-component", App);
 
-export default Arena;
+export default App;
