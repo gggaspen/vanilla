@@ -1,14 +1,18 @@
 import { initializeComponent } from "../../engine/load-resources.js";
+import { Signal } from "../../engine/signal.js"; // Importamos la implementación de Signal
 
 const config = {
   style: `./app/views/arena.css`,
   template: `./app/views/arena.html`,
 };
+
 class Arena extends HTMLElement {
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: "open" });
-    this.title = this.getAttribute("title");
+    this.titleSignal = Signal(
+      this.getAttribute("title") || "Título predeterminado"
+    );
     this.renderLoading();
     this.initialize();
   }
@@ -16,11 +20,22 @@ class Arena extends HTMLElement {
   initialize() {
     initializeComponent(this, config, {
       onAfterRender: () => {
-        this.updateTitle();
-        this.addReactiveClick();
+        this.checkElements();
+        this.titleSignal.subscribe((newTitle) => {
+          if (this.titleElement) {
+            this.titleElement.textContent = newTitle;
+          }
+        });
+        this.titleSignal.set("Holis");
       },
       onError: () => this.renderError(),
     });
+  }
+  checkElements() {
+    this.titleElement = this.shadow.querySelector("h1");
+    if (this.titleElement) {
+      this.titleElement.addEventListener("click", () => this.toggleTitle());
+    }
   }
 
   renderLoading() {
@@ -31,24 +46,13 @@ class Arena extends HTMLElement {
     this.shadow.innerHTML = `<p>Error al cargar el contenido</p>`;
   }
 
-  updateTitle() {
-    const h1 = this.shadow.querySelector("h1");
-    if (h1) {
-      h1.textContent = this.title;
-    }
-  }
-
-  addReactiveClick() {
-    const h1 = this.shadow.querySelector("h1");
-    if (h1) {
-      h1.addEventListener("click", () => this.toggleTitle());
-    }
-  }
-
   toggleTitle() {
-    this.title =
-      this.title === "Nuevo Título" ? "Título Original" : "Nuevo Título";
-    this.updateTitle();
+    const newTitle =
+      this.titleSignal.get() === "Nuevo Título"
+        ? "Título Original"
+        : "Nuevo Título";
+
+    this.titleSignal.set(newTitle);
   }
 }
 
