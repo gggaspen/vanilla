@@ -19,18 +19,18 @@ const loadComponentResources = (shadow, resources, hooks = {}) => {
 
   loadResources(resources)
     .then(([css, html]) => {
-      if (onBeforeRender) onBeforeRender(); // Hook antes del renderizado, opcional
+      if (onBeforeRender) onBeforeRender();
 
       // Renderizar el contenido común
       shadow.innerHTML = "";
       applyStyles(css, shadow);
       applyHTML(html, shadow);
 
-      if (onAfterRender) onAfterRender(); // Hook después del renderizado, opcional
+      if (onAfterRender) onAfterRender();
     })
     .catch((error) => {
       console.error("Error al cargar recursos:", error);
-      if (onError) onError(error); // Hook para gestionar errores, opcional
+      if (onError) onError(error);
     });
 };
 
@@ -42,8 +42,6 @@ const loadComponentResources = (shadow, resources, hooks = {}) => {
  */
 const initializeComponent = (component, config, hooks = {}) => {
   const { style, template } = config;
-
-  // Inicializar el componente usando los hooks proporcionados
   loadComponentResources(component.shadowRoot, [style, template], {
     onBeforeRender: hooks.onBeforeRender || (() => {}),
     onAfterRender: hooks.onAfterRender || (() => {}),

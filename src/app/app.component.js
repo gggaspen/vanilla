@@ -1,5 +1,6 @@
 import { initializeComponent } from "../core/load-resources.js";
 import { Signal } from "../core/signal.js";
+import Form from "./components/form/form.component.js";
 
 const config = {
   style: `./app/app.component.css`,
@@ -58,6 +59,6 @@ class App extends HTMLElement {
   }
 }
 
-customElements.define("app-component", App);
+customElements.define("app-root", App);
 
 export default App;
