@@ -12,5 +12,6 @@ main {
 }
 
 h1 {
+  cursor: pointer;
   color: yellow !important;
 }

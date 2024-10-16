@@ -9,6 +9,7 @@ const config = {
 
 class App extends HTMLElement {
   title = "";
+  showTitle = false;
 
   constructor() {
     super();
@@ -37,7 +38,7 @@ class App extends HTMLElement {
   checkElements() {
     this.titleElement = this.shadow.querySelector("h1");
     if (this.titleElement) {
-      this.titleElement.addEventListener("click", () => this.toggleTitle());
+      this.titleElement.addEventListener("click", () => this.onTitleClick());
     }
   }
 
@@ -49,13 +50,32 @@ class App extends HTMLElement {
     this.shadow.innerHTML = `<p>Error al cargar el contenido</p>`;
   }
 
-  toggleTitle() {
-    const newTitle =
-      this.titleSignal.get() === "Nuevo Título"
-        ? "Título Original"
-        : "Nuevo Título";
+  onTitleClick() {
+    this.showTitle = !this.showTitle;
+    if (this.showTitle) {
+      this.showForm();
+    } else {
+      this.hideForm();
+    }
+  }
 
-    this.titleSignal.set(newTitle);
+  showForm() {
+    this.titleSignal.set("ggggggggaspen");
+    const form = document.createElement("app-form");
+    // <app-form data-boolean="true" data-config='{"key": "value"}' />
+    form.setAttribute("title", this.titleSignal.get());
+    form.setAttribute("config", JSON.stringify(this.config));
+    form.setAttribute("boolean", true);
+    const dash = this.shadow.getElementById("dashboard");
+    dash.appendChild(form);
+  }
+
+  hideForm() {
+    this.titleSignal.set("gggaspen");
+    const form = this.shadow.querySelector("app-form");
+    if (form) {
+      this.shadow.getElementById("dashboard").removeChild(form);
+    }
   }
 }
 
